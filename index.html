@@ -55,7 +55,8 @@
   /* ---------- top app bar ---------- */
   .top { position: sticky; top: 0; z-index: 10; background: rgba(23, 18, 14, .88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; }
-  .brand { font-size: 1.375rem; font-weight: 500; text-decoration: none; letter-spacing: 0; }
+  .brand { display: inline-flex; align-items: center; gap: 12px; font-size: 1.375rem; font-weight: 500; text-decoration: none; letter-spacing: 0; }
+  .brand img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background: var(--primary-container); }
   .tabs { display: flex; gap: 4px; }
   .tabs a { text-decoration: none; padding: 10px 16px; border-radius: 999px; font-size: .875rem; font-weight: 500; letter-spacing: .1px; color: var(--on-surface-variant); }
   .tabs a:hover { color: var(--on-surface); }
@@ -147,7 +148,7 @@
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#top">skavaS2</a>
+    <a class="brand" href="#top"><img src="avatar.jpg" alt="" onerror="this.remove()">skavaS2</a>
     <nav class="tabs" aria-label="Разделы">
       <a class="sl" href="#projects">Проекты</a>
       <a class="sl" href="#about">Обо мне</a>
@@ -174,8 +175,7 @@
           </span>
         </div>
       </div>
-      <!-- Положи рядом с index.html свою картинку avatar.jpg — она появится в этой форме. Без неё будет буква. -->
-      <div class="avatar" aria-hidden="true">S2<img src="avatar.jpg" alt="" onerror="this.remove()"></div>
+      <div class="avatar" aria-hidden="true">S2</div>
     </div>
 
     <section id="projects">
