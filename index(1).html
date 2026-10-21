@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>skavaS2</title>
+<meta name="description" content="skavaS2 — проекты и контакты.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#17120e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* Material 3, тёмная схема, оранжевый ключевой цвет */
+  :root {
+    color-scheme: dark;
+    --surface: #17120e;
+    --surface-low: #1f1914;
+    --surface-container: #241d18;
+    --surface-high: #2f2721;
+    --surface-highest: #3a322b;
+    --on-surface: #f6eee9;
+    --on-surface-variant: #d7c3b8;
+    --outline: #a08d83;
+    --outline-variant: #52443b;
+    --primary: #ffb68a;
+    --on-primary: #502400;
+    --primary-container: #733600;
+    --on-primary-container: #ffdcc6;
+    --font: 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --ease: cubic-bezier(.2, 0, 0, 1);
+  }
+  * { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+  body {
+    background: var(--surface); color: var(--on-surface);
+    font-family: var(--font); font-size: 1rem; line-height: 1.5; letter-spacing: .01em;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--primary); outline-offset: 3px; }
+  ::selection { background: var(--primary); color: var(--on-primary); }
+  .wrap { width: min(960px, 100% - 32px); margin-inline: auto; }
+  svg.i { width: 24px; height: 24px; fill: currentColor; flex: none; }
+
+  /* state layer + ripple для всех интерактивных элементов */
+  .sl { position: relative; overflow: hidden; isolation: isolate; }
+  .sl::before { content: ''; position: absolute; inset: 0; background: currentColor; opacity: 0; transition: opacity .2s var(--ease); z-index: -1; }
+  .sl:hover::before { opacity: .08; }
+  .sl:focus-visible::before { opacity: .12; }
+  .ripple { position: absolute; border-radius: 50%; background: currentColor; opacity: .16; transform: scale(0); animation: rip .55s var(--ease) forwards; pointer-events: none; z-index: -1; }
+  @keyframes rip { to { transform: scale(1); opacity: 0; } }
+
+  /* ---------- top app bar ---------- */
+  .top { position: sticky; top: 0; z-index: 10; background: rgba(23, 18, 14, .88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 64px; }
+  .brand { font-size: 1.375rem; font-weight: 500; text-decoration: none; letter-spacing: 0; }
+  .tabs { display: flex; gap: 4px; }
+  .tabs a { text-decoration: none; padding: 10px 16px; border-radius: 999px; font-size: .875rem; font-weight: 500; letter-spacing: .1px; color: var(--on-surface-variant); }
+  .tabs a:hover { color: var(--on-surface); }
+
+  /* ---------- hero ---------- */
+  .hero { padding: clamp(40px, 9vw, 96px) 0 clamp(32px, 6vw, 56px); display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center; }
+  h1 { font-weight: 500; letter-spacing: -.03em; line-height: .95; font-size: clamp(3.4rem, 15vw, 7.5rem); }
+  .lead { margin-top: 20px; max-width: 30ch; font-size: clamp(1.25rem, 3.2vw, 1.75rem); line-height: 1.35; font-weight: 400; color: var(--on-surface-variant); letter-spacing: 0; }
+
+  .avatar {
+    width: clamp(120px, 22vw, 200px); aspect-ratio: 1; position: relative; overflow: hidden;
+    border-radius: 36% 64% 58% 42% / 45% 42% 58% 55%;
+    background: var(--primary-container); color: var(--on-primary-container);
+    display: grid; place-items: center; font-weight: 500; font-size: clamp(3.5rem, 10vw, 6rem);
+  }
+  .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+  .cta { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 24px; border-radius: 999px; font: 500 .875rem/1 var(--font); letter-spacing: .1px; text-decoration: none; border: 0; cursor: pointer; transition: box-shadow .2s var(--ease); }
+  .btn.filled { background: var(--primary); color: var(--on-primary); }
+  .btn.filled:hover { box-shadow: 0 1px 3px 1px rgba(0, 0, 0, .35); }
+  .btn.tonal { background: var(--surface-highest); color: var(--on-surface); }
+  .btn.outlined { color: var(--primary); box-shadow: inset 0 0 0 1px var(--outline); }
+
+  .status { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px 0 8px; border-radius: 8px; box-shadow: inset 0 0 0 1px var(--outline-variant); font-size: .875rem; font-weight: 500; letter-spacing: .1px; color: var(--on-surface-variant); }
+  .chip svg.i { width: 18px; height: 18px; color: var(--outline); }
+  .chip.on svg.i { color: var(--primary); }
+  .chip b { font-weight: 500; color: var(--on-surface); font-variant-numeric: tabular-nums; }
+
+  /* ---------- разделы ---------- */
+  section { padding-top: clamp(40px, 7vw, 72px); }
+  h2 { font-weight: 400; font-size: clamp(1.75rem, 4.5vw, 2.25rem); line-height: 1.2; letter-spacing: 0; margin-bottom: 16px; padding-left: 4px; }
+
+  /* проекты */
+  .cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .card { display: flex; flex-direction: column; justify-content: space-between; gap: 28px; min-height: 200px; padding: 24px; border-radius: 28px; background: var(--surface-container); text-decoration: none; transition: background .2s var(--ease); }
+  .card h3 { font-weight: 500; font-size: 1.75rem; line-height: 1.2; letter-spacing: 0; }
+  .card p { margin-top: 8px; color: var(--on-surface-variant); }
+  .card .foot { display: flex; align-items: center; justify-content: space-between; color: var(--primary); font-size: .875rem; font-weight: 500; letter-spacing: .1px; }
+  a.card:hover { background: var(--surface-high); }
+  .card.soon { background: transparent; box-shadow: inset 0 0 0 1px var(--outline-variant); justify-content: center; }
+  .card.soon h3 { font-weight: 400; color: var(--on-surface-variant); }
+
+  /* обо мне */
+  .panel { background: var(--surface-container); border-radius: 28px; padding: 28px; }
+  .panel p { max-width: 52ch; font-size: 1.125rem; line-height: 1.6; }
+  .facts { margin-top: 12px; border-radius: 28px; background: var(--surface-low); padding: 8px 0; }
+  .fact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 4px 20px; padding: 14px 28px; }
+  .fact + .fact { box-shadow: inset 0 1px 0 var(--outline-variant); }
+  .fact dt { color: var(--on-surface-variant); }
+  .fact dd { font-weight: 500; }
+
+  /* контакты — списком */
+  .contacts { list-style: none; padding: 0; border-radius: 28px; background: var(--surface-container); overflow: hidden; }
+  .contacts li + li { box-shadow: inset 0 1px 0 var(--outline-variant); }
+  .contacts a { display: flex; align-items: center; gap: 16px; padding: 14px 24px 14px 16px; text-decoration: none; min-height: 72px; }
+  .contacts .lead-ico { width: 40px; height: 40px; border-radius: 50%; background: var(--primary-container); color: var(--on-primary-container); display: grid; place-items: center; font-weight: 500; font-size: 1.125rem; flex: none; }
+  .contacts .txt { flex: 1; min-width: 0; }
+  .contacts .txt b { display: block; font-weight: 500; font-size: 1rem; }
+  .contacts .txt span { color: var(--on-surface-variant); font-size: .875rem; }
+  .contacts svg.i { color: var(--on-surface-variant); }
+
+  /* подвал */
+  footer { margin-top: clamp(56px, 9vw, 96px); padding-bottom: 32px; font-size: .875rem; color: var(--on-surface-variant); }
+  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 24px; box-shadow: inset 0 1px 0 var(--outline-variant); padding-top: 20px; }
+  footer a { text-decoration: none; color: var(--primary); font-weight: 500; padding: 8px 12px; margin: -8px -12px; border-radius: 999px; }
+
+  @media (max-width: 680px) {
+    .hero { grid-template-columns: 1fr; gap: 24px; }
+    .avatar { order: -1; width: 104px; font-size: 3rem; }
+    .cards { grid-template-columns: 1fr; }
+    .fact { grid-template-columns: 1fr; padding: 12px 20px; }
+    .panel { padding: 22px; }
+    .tabs a { padding: 10px 12px; }
+  }
+  @media (max-width: 380px) {
+    .brand { display: none; }
+    .tabs { width: 100%; justify-content: space-between; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { transition: none !important; }
+    .ripple { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">skavaS2</a>
+    <nav class="tabs" aria-label="Разделы">
+      <a class="sl" href="#projects">Проекты</a>
+      <a class="sl" href="#about">Обо мне</a>
+      <a class="sl" href="#contact">Контакты</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+    <div class="hero">
+      <div>
+        <h1>skavaS2</h1>
+        <!-- TODO: поменяй текст на свой -->
+        <p class="lead">У меня есть свой сервер Minecraft.</p>
+        <div class="cta">
+          <a class="btn filled sl" href="#projects">Мои проекты</a>
+          <a class="btn outlined sl" href="https://t.me/skavaik" target="_blank" rel="noopener">Написать мне</a>
+        </div>
+        <div class="status">
+          <span class="chip">
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+            <span>У меня сейчас <b id="clock">--:--</b></span>
+          </span>
+        </div>
+      </div>
+      <!-- Положи рядом с index.html свою картинку avatar.jpg — она появится в этой форме. Без неё будет буква. -->
+      <div class="avatar" aria-hidden="true">S2<img src="avatar.jpg" alt="" onerror="this.remove()"></div>
+    </div>
+
+    <section id="projects">
+      <h2>Проекты</h2>
+      <div class="cards">
+        <a class="card sl" href="https://magma.loc.cc">
+          <div>
+            <h3>Magma</h3>
+            <p>Мой сервер Minecraft: выживание, друзья и свой мир.</p>
+          </div>
+          <div class="foot"><span>magma.loc.cc</span>
+            <svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v2h8.59L5 17.59 6.41 19 16 9.41V18h2V6z"/></svg>
+          </div>
+        </a>
+        <!-- TODO: добавляй свои проекты сюда такими же карточками -->
+        <div class="card soon">
+          <div>
+            <h3>Скоро</h3>
+            <p>Здесь появятся новые проекты.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <h2>Обо мне</h2>
+      <!-- TODO: расскажи о себе -->
+      <div class="panel">
+        <p>Привет! Я вайбкодер и по совместительству хозяин собственного Minecraft-сервера. Я просто люблю общаться, так что заходите и пишите, не кусаюсь. 😄 😄 😄</p>
+      </div>
+      <dl class="facts">
+        <div class="fact"><dt>Ник</dt><dd>skavaS2</dd></div>
+        <div class="fact"><dt>Telegram</dt><dd>@skavaik</dd></div>
+        <div class="fact"><dt>Канал</dt><dd>@skavaS2</dd></div>
+        <div class="fact"><dt>Игра</dt><dd>Minecraft</dd></div>
+        <!-- TODO: добавь свои факты -->
+      </dl>
+    </section>
+
+    <section id="contact">
+      <h2>Контакты</h2>
+      <!-- TODO: впиши реальные ссылки вместо # и свои имена -->
+      <ul class="contacts">
+        <li><a class="sl" href="https://t.me/skavaik" target="_blank" rel="noopener"><span class="lead-ico" aria-hidden="true">T</span><span class="txt"><b>Telegram</b><span>@skavaik — написать в личку</span></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v2h8.59L5 17.59 6.41 19 16 9.41V18h2V6z"/></svg></a></li>
+        <li><a class="sl" href="https://t.me/skavaS2" target="_blank" rel="noopener"><span class="lead-ico" aria-hidden="true">K</span><span class="txt"><b>Telegram-канал</b><span>@skavaS2 — новости и анонсы</span></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v2h8.59L5 17.59 6.41 19 16 9.41V18h2V6z"/></svg></a></li>
+        <!-- TODO: сюда можно вернуть Discord и YouTube, когда они появятся -->
+        <li><a class="sl" href="https://github.com/skava20018" target="_blank" rel="noopener"><span class="lead-ico" aria-hidden="true">G</span><span class="txt"><b>GitHub</b><span>skava20018 — код и проекты</span></span><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6v2h8.59L5 17.59 6.41 19 16 9.41V18h2V6z"/></svg></a></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year">2026</span> skavaS2</span>
+    <a class="sl" href="#top">Наверх</a>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Ripple как в Material
+  document.addEventListener('pointerdown', function (e) {
+    var el = e.target.closest('.sl');
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var r = el.getBoundingClientRect();
+    var size = Math.max(r.width, r.height) * 2.2;
+    var s = document.createElement('span');
+    s.className = 'ripple';
+    s.style.width = s.style.height = size + 'px';
+    s.style.left = (e.clientX - r.left - size / 2) + 'px';
+    s.style.top = (e.clientY - r.top - size / 2) + 'px';
+    el.appendChild(s);
+    setTimeout(function () { s.remove(); }, 600);
+  });
+
+  // Время. TODO: поменяй часовой пояс или удали этот блок вместе с плашкой.
+  var clock = document.getElementById('clock');
+  function tick() {
+    try {
+      clock.textContent = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Krasnoyarsk' });
+    } catch (e) { clock.textContent = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }); }
+  }
+  tick(); setInterval(tick, 20000);
+</script>
+</body>
+</html>
